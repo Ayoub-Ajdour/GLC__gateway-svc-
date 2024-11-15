@@ -1,0 +1,17 @@
+#spring:
+#  cloud:
+#    gateway:
+#      mvc:
+#        routes:
+#          - id: customer-service
+#            uri: http://localhost:8881/
+#            predicates:
+#              - Path=/customers/**
+#          - id: bank-account-service
+#            uri: http://localhost:8883/
+#            predicates:
+#              - Path=/bankaccounts/**
+#  application:
+#    name: gateway-svc
+#server:
+#  port: 8888
