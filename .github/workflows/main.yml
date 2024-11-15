@@ -1,4 +1,4 @@
-name: Build and Push bank-gateway Docker Image
+name: Build and Push Docker Image
 
 on:
   push:
@@ -18,30 +18,21 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-    - name: Check if mvnw exists
-      run: ls -l ./gateway-svc/mvnw
 
     - name: Grant execute permission to mvnw
-      run: chmod +x ./gateway-svc/mvnw
+      run: chmod +x ./mvnw
 
     - name: Build JAR (without tests)
-      run: ./gateway-svc/mvnw clean package -DskipTests
-
-    - name: List files in gateway-svc
-      run: ls -al ./gateway-svc
+      run: ./mvnw clean package -DskipTests
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bank-gateway:$GITHUB_SHA ./gateway-svc
-
-    - name: Debug Docker Info
-      run: docker info
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA .
 
     - name: Run Trivy Scan with Retry
       run: |
         for i in {1..3}; do
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/trivy-cache:/root/.cache/trivy aquasec/trivy:latest image ${{ secrets.DOCKER_USERNAME }}/bank-gateway:$GITHUB_SHA && break || sleep 60
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/trivy-cache:/root/.cache/trivy aquasec/trivy:latest image ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA && break || sleep 60
         done
-
     - name: Log in to DockerHub
       uses: docker/login-action@v2
       with:
@@ -49,4 +40,4 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
 
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/bank-gateway:$GITHUB_SHA
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA
