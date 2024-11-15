@@ -28,6 +28,10 @@ jobs:
     - name: Build Docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA .
 
+    - name: Install Trivy
+      run: |
+        curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.39.0/trivy_0.39.0_Linux-x86_64.tar.gz | tar -xzv -C /usr/local/bin trivy
+
     - name: Run Trivy scan
       run: trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA
 
