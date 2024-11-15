@@ -30,7 +30,10 @@ jobs:
 
     - name: Install Trivy
       run: |
-        curl -sSL https://github.com/aquasecurity/trivy/releases/download/v0.39.0/trivy_0.39.0_Linux-x86_64.tar.gz | tar -xzv -C /usr/local/bin
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.39.0/trivy_0.39.0_Linux-x86_64.deb
+        sudo dpkg -i trivy_0.39.0_Linux-x86_64.deb
 
     - name: Run Trivy scan
       run: trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA
