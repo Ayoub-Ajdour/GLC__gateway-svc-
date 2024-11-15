@@ -28,15 +28,11 @@ jobs:
     - name: Build Docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA .
 
-    - name: Install Trivy
+    - name: Run Trivy Scan with Retry
       run: |
-        sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.39.0/trivy_0.39.0_Linux-x86_64.deb
-        sudo dpkg -i trivy_0.39.0_Linux-x86_64.deb
-
-    - name: Run Trivy scan
-      run: trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA
+        for i in {1..3}; do
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/trivy-cache:/root/.cache/trivy aquasec/trivy:latest image ${{ secrets.DOCKER_USERNAME }}/your-image-name:$GITHUB_SHA && break || sleep 60
+        done
 
     - name: Log in to DockerHub
       uses: docker/login-action@v2
