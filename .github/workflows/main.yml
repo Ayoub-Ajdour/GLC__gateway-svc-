@@ -19,6 +19,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Grant execute permission to mvnw
+      run: chmod +x ./mvnw
+
     - name: Build JAR (without tests)
       run: ./mvnw clean package -DskipTests
 
