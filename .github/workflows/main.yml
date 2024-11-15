@@ -18,8 +18,6 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-
-    # Debugging: Check if mvnw exists
     - name: Check if mvnw exists
       run: ls -l ./gateway-svc/mvnw
 
@@ -29,14 +27,12 @@ jobs:
     - name: Build JAR (without tests)
       run: ./gateway-svc/mvnw clean package -DskipTests
 
-    # Debugging: Check files in gateway-svc
     - name: List files in gateway-svc
       run: ls -al ./gateway-svc
 
     - name: Build Docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bank-gateway:$GITHUB_SHA ./gateway-svc
 
-    # Debugging: Show Docker info
     - name: Debug Docker Info
       run: docker info
 
