@@ -26,7 +26,7 @@ jobs:
       run: ./mvnw clean package -DskipTests
 
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/GLC-gatewaysvc:$GITHUB_SHA .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/glc-gatewaysvc:$GITHUB_SHA .
 
     - name: Run Trivy Scan with Retry
       run: |
@@ -40,4 +40,4 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
 
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/GLC-gatewaysvc:$GITHUB_SHA
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/glc-gatewaysvc:$GITHUB_SHA
