@@ -24,6 +24,13 @@ jobs:
 
     - name: Build JAR (without tests)
       run: ./mvnw clean package -DskipTests
+    - name: SonarCloud Scan
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=Ayoub-Ajdour_GLC__gateway-svc- \
+          -Dsonar.organization=ayoub-ajdour \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONARTOKEN }}
 
     - name: Build Docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/glc-discovery-svc:${{ github.sha }} .
